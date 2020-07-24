@@ -3,4 +3,3 @@ node_modules/
 cats/*
 !cats/.gitkeep
 yarn.lock
-package-lock.json
