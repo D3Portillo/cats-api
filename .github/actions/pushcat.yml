@@ -1,0 +1,5 @@
+name: "Push cat"
+description: "Action to push cats and be served by API"
+runs:
+  using: "node11"
+  main: "zipcats.js"

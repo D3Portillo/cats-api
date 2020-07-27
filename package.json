@@ -1,6 +1,5 @@
 {
   "devDependencies": {
-    "@gumlet/gif-resize": "^1.1.1",
-    "sharp": "^0.25.4"
+    "@gumlet/gif-resize": "^1.1.1"
   }
 }
