@@ -5,5 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Zipping cats
-        uses: node12
-        main: zipcats.js
+        uses: ./zipcats.js
