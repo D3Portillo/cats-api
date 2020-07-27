@@ -1,0 +1,9 @@
+name: Build and zip cats :(
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Zipping cats
+        uses: node12
+        main: zipcats.js
