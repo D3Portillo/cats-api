@@ -3,6 +3,7 @@
     "build": "node zipcats"
   },
   "devDependencies": {
+    "sharp": "^0.25.4",
     "@gumlet/gif-resize": "^1.1.1"
   }
 }
