@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/get.js": {
-      "includeFiles": "zippedcats/**"
+      "includeFiles": "../zippedcats/**"
     }
   }
 }

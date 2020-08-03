@@ -1,15 +1,33 @@
 const sharp = require("sharp")
 const gresize = require("@gumlet/gif-resize")
 const fs = require("fs")
-const zlib = require("zlib")
-const CATS_WIDTH = 385
-const ommit = ["./gatos/example.png", "./gatos/README.md"]
-const destinationPath = "./src/api/zippedcats"
+/**
+ * The Width to resize cats to
+ * @type {Number}
+ */
+const CATS_WIDTH = 340
 
+/**
+ * List of files inside gatos folder to ignore
+ * @type {Array<string>}
+ */
+const ommit = ["./gatos/example.png", "./gatos/README.md"]
+const destinationPath = "./src/zippedcats"
+
+/**
+ * .gif image resizer
+ * @type { ( imageBuffer: Buffer ) => Promise<Buffer> }
+ */
 const resize = gresize({
   width: CATS_WIDTH,
   optimizationLevel: 3,
+  colors: 98,
 })
+
+/**
+ * Returns a "Unnique" filename to save the cat
+ * @type { ( catName: string ) => string }
+ */
 const giveMeAHash = (name) => {
   const things = "abcdefghijlklmnopqrstuvwxyz0123456789_-"
   const lilHash = [...Array(5)].map(() => {
@@ -18,41 +36,44 @@ const giveMeAHash = (name) => {
   })
   return `${name}-${new Date().getTime()}${lilHash.join("")}`
 }
-const writeOut = ({ buffer, path }) => {
-  const data = zlib.deflateSync(buffer, {
-    level: 9,
-    memLevel: 4,
-    strategy: 2,
+/**
+ * Tries to shrink cat image and return a buffer
+ * @param {Buffer} defaultBuffer
+ * @param {string} type
+ */
+const buffCatUp = (defaultBuffer, type) => {
+  return new Promise((completeWith) => {
+    try {
+      if (type != "gif") {
+        return sharp(defaultBuffer)
+          .flatten()
+          .resize({
+            width: CATS_WIDTH,
+          })
+          .jpeg({
+            force: true,
+            progressive: true,
+            quality: 65,
+          })
+          .toBuffer()
+          .then((buffer) => completeWith(buffer))
+      }
+      resize(defaultBuffer).then((buffer) => completeWith(buffer))
+    } catch (error) {
+      console.error({ error })
+      completeWith(defaultBuffer)
+    }
   })
-  fs.writeFileSync(path, data)
 }
-const theCats = []
-fs.readdirSync("./gatos").map((gato, index, arr) => {
+fs.readdirSync("./gatos").map((gato) => {
   const catToRead = `./gatos/${gato}`
-  const isLast = index == arr.length - 1
   const [name, type] = gato.split(".")
   if (!ommit.includes(catToRead)) {
     const cat = fs.readFileSync(catToRead)
     const catPath = `${destinationPath}/${giveMeAHash(name)}`
-    theCats.push(gato)
-    if (type != "gif") {
-      sharp(cat)
-        .flatten()
-        .resize({
-          width: CATS_WIDTH,
-        })
-        .jpeg({
-          force: true,
-          progressive: true,
-          quality: 65,
-        })
-        .toBuffer()
-        .then((buffer) => writeOut({ buffer, path: catPath }))
-    } else {
-      resize(cat).then((croppedCat) => {
-        writeOut({ buffer: croppedCat, path: catPath })
-      })
-    }
+    buffCatUp(cat, type).then((data) => {
+      const fileType = type == "gif" ? type : "jpg"
+      fs.writeFileSync(`${catPath}.${fileType}`, data)
+    })
   }
-  if (isLast) fs.writeFileSync(`${destinationPath}/list`, theCats.join("|"))
 })

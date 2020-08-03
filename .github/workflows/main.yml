@@ -5,4 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Zipping cats
-        uses: ./zipcats.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 11.x
+      - name: Installing deps
+      - run: npm install
+      - name: Running script
+      - run: npm run build
