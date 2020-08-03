@@ -10,3 +10,10 @@ jobs:
         run: npm install
       - name: Trying to zip cats
         run: npm run build
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: includes new cato files
+          title: Pushing some cats OwO
+          body: 🐈🐈 from GH Action
+          branch: new-catos
