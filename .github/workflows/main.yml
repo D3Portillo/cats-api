@@ -4,9 +4,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - name: Installing deps
-      - run: npm install
+        run: npm install
       - name: Trying to zip cats
-      - run: npm run build
+        run: npm run build
