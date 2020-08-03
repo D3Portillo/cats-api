@@ -6,7 +6,7 @@ jobs:
     steps:
         uses: actions/setup-node@v1
         with:
-          node-version: 11.x
+          node-version: "11.x"
       - name: Installing deps
       - run: npm install
       - name: Trying to zip cats
