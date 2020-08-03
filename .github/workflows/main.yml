@@ -4,11 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Zipping cats
         uses: actions/setup-node@v1
         with:
           node-version: 11.x
       - name: Installing deps
       - run: npm install
-      - name: Running script
+      - name: Trying to zip cats
       - run: npm run build
